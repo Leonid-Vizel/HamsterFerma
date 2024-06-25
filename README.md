@@ -5,6 +5,7 @@
 2) Зайти в самого хомяка и прописать в консоль(F12) :
    
 console.log("Use this address in your browser:", document.getElementsByTagName('iframe')[0].src = document.getElementsByTagName('iframe')[0].src.replace(/(tgWebAppPlatform=)[^&]+/, "$1android"))
+
 3) Кликнуть по появившейся ссылке
 
 ![image](https://github.com/Leonid-Vizel/HamsterFerma/assets/90096356/e7de8585-30e3-4eb6-966a-9590829ddc44)
