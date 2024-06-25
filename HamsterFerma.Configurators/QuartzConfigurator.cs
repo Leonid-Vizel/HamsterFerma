@@ -42,6 +42,7 @@ public static class QuartzConfigurator
             });
             options.UseInMemoryStore();
             HamsterWatchDog.ConfigureFor(options, zone);
+            HamsterWatchUpgrade.ConfigureFor(options, zone);
         });
 
         builder.Services.AddQuartzHostedService(options =>

@@ -67,33 +67,5 @@ public sealed class HamsterWatchDog(IHamsterApiClient client, ILogger<HamsterWat
                 return;
             }
         }
-
-        var upgrageList = await client.GetUpgradeListAsync();
-        if (upgrageList == null)
-        {
-            logger.LogError("UpgradeList returned null!");
-            return;
-        }
-
-        var bests = upgrageList.UpgradesForBuy
-            .Where(x => x.IsAvailable)
-            .Where(x => !x.IsExpired)
-            .Where(x => x.CooldownSeconds == null || x.CooldownSeconds == 0)
-            .OrderByDescending(x => x.Ratio)
-            .Take(1)
-            .OrderBy(x => x.Price)
-            .ToList();
-
-        foreach (var upgrade in bests)
-        {
-            userData.BalanceCoins -= upgrade.Price;
-            if (userData.BalanceCoins <= 0)
-            {
-                break;
-            }
-            var buyRequest = new HamsterUpgradeBuyRequest(upgrade.Id);
-            logger.LogInformation($"Покупка улучшения {upgrade.Name} по цене: {upgrade.Price} с дельтой {upgrade.ProfitPerHourDelta}.");
-            await client.BuyUpgradeAsync(buyRequest);
-        }
     }
 }
