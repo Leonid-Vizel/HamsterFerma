@@ -1,22 +1,21 @@
-﻿using HamsterFerma.Models.Taps;
-using HamsterFerma.Models.UpgradeBuy;
+﻿using HamsterFerma.Models.UpgradeBuy;
 using HamsterFerma.Services.Clients;
 using Microsoft.Extensions.Logging;
 using Quartz;
 
 namespace HamsterFerma.Services.Jobs;
 
-public class HamsterWatchUpgrade(IHamsterApiClient client, ILogger<HamsterWatchDog> logger) : IJob
+public class HamsterUpgradeWatchDog(IHamsterApiClient client, ILogger<HamsterClickerWatchDog> logger) : IJob
 {
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, TimeZoneInfo timeZone)
     {
         var key = CreateKey();
-        options.AddJob<HamsterWatchUpgrade>(key)
-            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule("0 * * ? * * *", x => x.InTimeZone(timeZone)));
+        options.AddJob<HamsterUpgradeWatchDog>(key)
+            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule("10 * * ? * * *", x => x.InTimeZone(timeZone)));
     }
 
     public static JobKey CreateKey()
-        => JobKey.Create(nameof(HamsterWatchUpgrade));
+        => JobKey.Create(nameof(HamsterUpgradeWatchDog));
 
     public async Task Execute(IJobExecutionContext context)
     {
@@ -41,16 +40,18 @@ public class HamsterWatchUpgrade(IHamsterApiClient client, ILogger<HamsterWatchD
             .OrderBy(x => x.Price)
             .ToList();
 
+        double actualBalance = userData.BalanceCoins;
+
         foreach (var upgrade in bests)
         {
             userData.BalanceCoins -= upgrade.Price;
-            if (userData.BalanceCoins <= 0)
+            if (userData.BalanceCoins <= client.Config.MinBalance)
             {
                 break;
             }
-            if(upgrade.CooldownSeconds!=null && upgrade.CooldownSeconds != 0)
+            if (upgrade.CooldownSeconds != null && upgrade.CooldownSeconds != 0)
             {
-                logger.LogInformation($"Отложенное улучшение {upgrade.Name} по цене: {upgrade.Price} с дельтой {upgrade.ProfitPerHourDelta} через {(double)upgrade.CooldownSeconds/60} минут.");
+                logger.LogInformation($"Ожидаю ({actualBalance}/{upgrade.Price}) улучшение {upgrade.Name} по цене: {upgrade.Price} с дельтой {upgrade.ProfitPerHourDelta} через {(double)upgrade.CooldownSeconds / 60} минут.");
                 continue;
             }
             var buyRequest = new HamsterUpgradeBuyRequest(upgrade.Id);

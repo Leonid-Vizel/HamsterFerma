@@ -28,21 +28,35 @@ public static class QuartzConfigurator
             x.DefaultRequestHeaders.Add("sec-ch-ua-platform", "\"Windows\"");
         });
         builder.Services.AddScoped<IHamsterApiClient, HamsterApiClient>();
-        var configs = new AuthBearerConfig();
-        builder.Configuration.GetSection("Bearer").Bind(configs);
-        builder.Services.AddSingleton(configs);
+        var config = new AuthBearerConfig();
+        builder.Configuration.GetSection("Bearer").Bind(config);
+        builder.Services.AddSingleton(config);
         var zone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
 
         builder.Services.AddQuartz(options =>
         {
             options.InterruptJobsOnShutdown = true;
-            options.UseDefaultThreadPool(1, x=>
+            options.UseDefaultThreadPool(1, x =>
             {
                 x.MaxConcurrency = 1;
             });
             options.UseInMemoryStore();
-            HamsterWatchDog.ConfigureFor(options, zone);
-            HamsterWatchUpgrade.ConfigureFor(options, zone);
+            if (config.AutoClick)
+            {
+                HamsterClickerWatchDog.ConfigureFor(options, zone);
+            }
+            if (config.AutoUpgrade)
+            {
+                HamsterUpgradeWatchDog.ConfigureFor(options, zone);
+            }
+            if (config.AutoBoost)
+            {
+                HamsterBoostWatchDog.ConfigureFor(options, zone);
+            }
+            if (config.AutoCipher)
+            {
+                HamsterCipherWatchDog.ConfigureFor(options, zone);
+            }
         });
 
         builder.Services.AddQuartzHostedService(options =>
