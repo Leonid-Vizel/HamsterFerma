@@ -54,4 +54,15 @@ public class HamsterUpgrade
             return (double)ProfitPerHourDelta / Price;
         }
     }
+    public double RatioWithCoolDown
+    {
+        get
+        {
+            if (IsAvailable && CooldownSeconds!=null && CooldownSeconds.Value!=0)
+            {
+                return (double)ProfitPerHourDelta * 60 / (Price * CooldownSeconds.Value);
+            }
+            return Ratio;
+        }
+    }
 }
