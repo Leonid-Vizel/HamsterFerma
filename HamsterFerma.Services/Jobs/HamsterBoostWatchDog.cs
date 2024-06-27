@@ -59,7 +59,7 @@ public sealed class HamsterBoostWatchDog(IHamsterApiClient client, ILogger<Hamst
         foreach (var boost in boosts)
         {
             userData.BalanceCoins -= boost.Price;
-            if (userData.BalanceCoins <= client.Config.MinBalance || boost.Price == 0)
+            if (userData.BalanceCoins <= client.Config.MinBalance && boost.Price != 0)
             {
                 break;
             }
