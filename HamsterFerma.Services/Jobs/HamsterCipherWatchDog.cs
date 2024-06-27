@@ -25,11 +25,6 @@ public sealed class HamsterCipherWatchDog(IHamsterApiClient client, ILogger<Hams
             logger.LogError("Config returned null!");
             return;
         }
-        if (config.DailyCipher.RemainSeconds > 0)
-        {
-            logger.LogWarning($"Время разгадывать шифр ещё не пришло! Неверно настроен вызов дешифратора (RemainSeconds = {config.DailyCipher.RemainSeconds})!");
-            return;
-        }
         if (config.DailyCipher.IsClaimed)
         {
             logger.LogInformation("Шифр уже расшифрован, дешифровка пропущена.");
