@@ -12,6 +12,7 @@ public sealed class AuthBearerConfig
     public bool AutoClick { get; set; } = true;
     public bool AutoUpgrade { get; set; } = true;
     public bool AutoCipher { get; set; } = true;
+    public bool AutoTask { get; set; } = true;
     [JsonIgnore]
     public bool AutoBoost => BuyClickLimitBoosts || BuyUselessPerClickBoosts || BuyClickFullLimitBoosts;
 }

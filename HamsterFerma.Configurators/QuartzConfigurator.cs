@@ -57,6 +57,10 @@ public static class QuartzConfigurator
             {
                 HamsterCipherWatchDog.ConfigureFor(options, zone);
             }
+            if (config.AutoTask)
+            {
+                HamsterTaskWatchDog.ConfigureFor(options, zone);
+            }
         });
 
         builder.Services.AddQuartzHostedService(options =>

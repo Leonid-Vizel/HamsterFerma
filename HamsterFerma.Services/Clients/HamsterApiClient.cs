@@ -1,7 +1,9 @@
 ﻿using HamsterFerma.Models.BoostList;
+using HamsterFerma.Models.CheckTask;
 using HamsterFerma.Models.Cipher;
 using HamsterFerma.Models.Config;
 using HamsterFerma.Models.Taps;
+using HamsterFerma.Models.Tasks;
 using HamsterFerma.Models.UpgradeBuy;
 using HamsterFerma.Models.Upgrades;
 using HamsterFerma.Services.Configs;
@@ -15,6 +17,9 @@ public interface IHamsterApiClient
     AuthBearerConfig Config { get; }
     Task<HamsterUpgradeListResponse?> GetUpgradeListAsync();
     Task<HamsterBoostListResponse?> GetBoostListAsync();
+    Task<HamsterTaskListResponse?> GetTaskListAsync();
+    Task<HamsterCheckTaskResponse?> CheckTaskAsync(HamsterCheckTaskRequest request);
+    Task<HamsterCheckTaskResponse?> CheckTaskAsync(string taskId);
     Task<HamsterSyncResponse?> SyncAsync();
     Task<HamsterConfigResponse?> ConfigAsync();
     Task<bool> ClaimDailyCipher(HamsterCipherRequest request);
@@ -53,6 +58,20 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
         var responseJson = await JsonSerializer.DeserializeAsync<HamsterBoostListResponse>(responseStream);
+        return responseJson;
+    }
+
+    public async Task<HamsterTaskListResponse?> GetTaskListAsync()
+    {
+        using var client = clientFactory.CreateClient("Hamster");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/list-tasks", null);
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            return null;
+        }
+        using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
+        var responseJson = await JsonSerializer.DeserializeAsync<HamsterTaskListResponse>(responseStream);
         return responseJson;
     }
 
@@ -99,6 +118,25 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         var responseJson = await JsonSerializer.DeserializeAsync<HamsterTapResponse>(responseStream);
         return responseJson;
     }
+
+    public async Task<HamsterCheckTaskResponse?> CheckTaskAsync(HamsterCheckTaskRequest request)
+    {
+        using var client = clientFactory.CreateClient("Hamster");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        var serializedRequest = JsonSerializer.Serialize(request);
+        var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
+        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/check-task", serializedRequestContent);
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            return null;
+        }
+        using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
+        var responseJson = await JsonSerializer.DeserializeAsync<HamsterCheckTaskResponse>(responseStream);
+        return responseJson;
+    }
+
+    public Task<HamsterCheckTaskResponse?> CheckTaskAsync(string taskId)
+        => CheckTaskAsync(new HamsterCheckTaskRequest(taskId));
 
     public async Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(HamsterUpgradeBuyRequest request)
     {
