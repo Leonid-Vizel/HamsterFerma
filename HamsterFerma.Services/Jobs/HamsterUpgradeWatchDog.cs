@@ -5,7 +5,7 @@ using Quartz;
 
 namespace HamsterFerma.Services.Jobs;
 
-public class HamsterUpgradeWatchDog(IHamsterApiClient client, ILogger<HamsterClickerWatchDog> logger) : IJob
+public class HamsterUpgradeWatchDog(IHamsterApiClient client, ILogger<HamsterUpgradeWatchDog> logger) : IJob
 {
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, TimeZoneInfo timeZone)
     {
