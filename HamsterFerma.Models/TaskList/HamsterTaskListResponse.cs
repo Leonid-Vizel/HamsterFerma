@@ -17,7 +17,7 @@ public sealed class HamsterTask
     [JsonPropertyName("completedAt")]
     public DateTime? CompletedAt { get; set; }
     [JsonPropertyName("channelId")]
-    public int? ChannelId { get; set; }
+    public long? ChannelId { get; set; }
     [JsonPropertyName("days")]
     public int? Days { get; set; }
     [JsonPropertyName("remainSeconds")]
