@@ -1,5 +1,4 @@
 ﻿using HamsterFerma.Models.Taps;
-using HamsterFerma.Models.UpgradeBuy;
 using HamsterFerma.Services.Clients;
 using Microsoft.Extensions.Logging;
 using Quartz;
