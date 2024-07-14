@@ -26,7 +26,7 @@ public sealed class HamsterClickerWatchDog(IHamsterApiClient client, ILogger<Ham
             return;
         }
 
-        if (userData.AvailableTaps > 0)
+        if (userData.AvailableTaps > 500)
         {
             logger.LogInformation($"Отправка {userData.AvailableTaps} нажатий.");
             var tapRequest = new HamsterTapRequest(userData.AvailableTaps);

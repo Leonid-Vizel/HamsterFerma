@@ -35,6 +35,7 @@ public class HamsterUpgradeWatchDog(IHamsterApiClient client, ILogger<HamsterUpg
         var bests = upgrageList.UpgradesForBuy
             .Where(x => x.IsAvailable)
             .Where(x => !x.IsExpired)
+            .Where(x => !(x.ProfitPerHourDelta == 0 && x.Level == 2))
             .OrderByDescending(x => x.RatioWithCoolDown)
             .Take(1)
             .OrderBy(x => x.Price)

@@ -6,6 +6,11 @@ namespace HamsterFerma.Services.Jobs;
 
 public sealed class HamsterTaskWatchDog(IHamsterApiClient client, ILogger<HamsterTaskWatchDog> logger) : IJob
 {
+    private static string[] ignoreTasks =
+    [
+        "invite_friends"
+    ];
+
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, TimeZoneInfo timeZone)
     {
         var key = CreateKey();
@@ -28,6 +33,7 @@ public sealed class HamsterTaskWatchDog(IHamsterApiClient client, ILogger<Hamste
             .Where(x => x.ChannelId == null)
             .Where(x => !x.IsCompleted)
             .Where(x => x.RemainSeconds == 0 || x.RemainSeconds == null)
+            .Where(x => !ignoreTasks.Contains(x.Id))
             .ToList();
         foreach (var task in nonCompletedTasks)
         {
