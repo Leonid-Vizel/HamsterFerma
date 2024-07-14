@@ -37,7 +37,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
     {
         using var client = clientFactory.CreateClient("Hamster");
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/upgrades-for-buy", null);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/upgrades-for-buy", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -51,7 +51,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
     {
         using var client = clientFactory.CreateClient("Hamster");
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/boosts-for-buy", null);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/boosts-for-buy", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -65,7 +65,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
     {
         using var client = clientFactory.CreateClient("Hamster");
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/list-tasks", null);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/list-tasks", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -79,7 +79,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
     {
         using var client = clientFactory.CreateClient("Hamster");
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/sync", null);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/sync", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -93,7 +93,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
     {
         using var client = clientFactory.CreateClient("Hamster");
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/config", null);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/config", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -109,7 +109,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/tap", serializedRequestContent);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/tap", serializedRequestContent);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -125,7 +125,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/check-task", serializedRequestContent);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/check-task", serializedRequestContent);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -144,7 +144,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/buy-upgrade", serializedRequestContent);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/buy-upgrade", serializedRequestContent);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -160,7 +160,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/buy-boost", serializedRequestContent);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/buy-boost", serializedRequestContent);
         if (!httpResponse.IsSuccessStatusCode)
         {
             return null;
@@ -176,7 +176,7 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
-        var httpResponse = await client.PostAsync("https://api.hamsterkombat.io/clicker/claim-daily-cipher", serializedRequestContent);
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/claim-daily-cipher", serializedRequestContent);
         return httpResponse.IsSuccessStatusCode;
     }
 
