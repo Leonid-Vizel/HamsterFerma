@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HamsterFerma.Models.Upgrades;
+namespace HamsterFerma.Models.UpgradeList;
 
 public class HamsterUpgrade
 {
@@ -58,7 +58,7 @@ public class HamsterUpgrade
     {
         get
         {
-            if (IsAvailable && CooldownSeconds!=null && CooldownSeconds.Value!=0)
+            if (IsAvailable && CooldownSeconds != null && CooldownSeconds.Value != 0)
             {
                 return (double)ProfitPerHourDelta * 60 / (Price * CooldownSeconds.Value);
             }

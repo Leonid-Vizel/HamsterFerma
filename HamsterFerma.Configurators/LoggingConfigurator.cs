@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace NeuroMonitoring.Configurators;
+namespace HamsterFerma.Configurators;
 
 public static class LoggingConfigurator
 {

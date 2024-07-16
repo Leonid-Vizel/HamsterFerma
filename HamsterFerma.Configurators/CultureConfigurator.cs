@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace NeuroMonitoring.Configurators;
+namespace HamsterFerma.Configurators;
 
 public static class CultureConfigurator
 {

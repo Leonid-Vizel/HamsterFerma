@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 
-namespace NeuroMonitoring.Configurators;
+namespace HamsterFerma.Configurators;
 
 public static class QuartzConfigurator
 {
@@ -19,6 +19,7 @@ public static class QuartzConfigurator
         builder.Services
             .AddScoped<IHamsterApiClient, HamsterApiClient>()
             .AddSingleton<IAuthConfigDecoder, AuthConfigDecoder>()
+            .AddSingleton<IHamsterCipherDecoder, HamsterCipherDecoder>()
             .AddSingleton(configs)
             .AddQuartz(options =>
             {

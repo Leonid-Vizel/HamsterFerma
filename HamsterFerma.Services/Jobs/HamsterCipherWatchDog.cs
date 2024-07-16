@@ -10,6 +10,7 @@ namespace HamsterFerma.Services.Jobs;
 
 public sealed class HamsterCipherWatchDog(IHamsterApiClient client,
                                           IAuthConfigDecoder configDecoder,
+                                          IHamsterCipherDecoder cipherDecoder,
                                           ILogger<HamsterCipherWatchDog> logger) : IJob
 {
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
@@ -52,15 +53,12 @@ public sealed class HamsterCipherWatchDog(IHamsterApiClient client,
             logger.LogInformation($"[Tag: {config.Tag}] Шифр уже расшифрован, дешифровка пропущена.");
             return;
         }
-        var encoded = clickerConfig.DailyCipher.Cipher;
-        var mixed = $"{encoded.Substring(0, 3)}{encoded.Substring(4)}";
-        var base64Bytes = Convert.FromBase64String(mixed);
-        var decoded = Encoding.UTF8.GetString(base64Bytes);
+        var decoded = cipherDecoder.Decode(clickerConfig.DailyCipher.Cipher);
 
         var claimResult = await client.ClaimDailyCipher(config, decoded);
         if (!claimResult)
         {
-            logger.LogError($"[Tag: {config.Tag}] Неудачная дешифровка! (encoded='{encoded}', mixed='{mixed}', decoded='{decoded}')!");
+            logger.LogError($"[Tag: {config.Tag}] Неудачная дешифровка! (decoded='{decoded}')!");
             return;
         }
         logger.LogInformation($"[Tag: {config.Tag}] Успешно расшифровано. Сегодняшний шифр: {decoded}. За счёт этого получено монет: {clickerConfig.DailyCipher.BonusCoins}.");

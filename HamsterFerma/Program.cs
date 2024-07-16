@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
-using NeuroMonitoring.Configurators;
+﻿using HamsterFerma.Configurators;
+using Microsoft.Extensions.Hosting;
 
 CultureConfigurator.Configure();
 

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HamsterFerma.Models.Upgrades;
+namespace HamsterFerma.Models.UpgradeList;
 
 public sealed class HamsterUpgradeCondition
 {

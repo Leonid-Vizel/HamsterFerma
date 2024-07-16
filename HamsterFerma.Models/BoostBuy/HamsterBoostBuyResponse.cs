@@ -1,7 +1,7 @@
 ﻿using HamsterFerma.Models.User;
 using System.Text.Json.Serialization;
 
-namespace HamsterFerma.Models.UpgradeBuy;
+namespace HamsterFerma.Models.BoostBuy;
 
 public sealed class HamsterBoostBuyResponse
 {

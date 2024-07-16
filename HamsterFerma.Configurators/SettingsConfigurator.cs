@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace NeuroMonitoring.Configurators;
+namespace HamsterFerma.Configurators;
 
 public static class SettingsConfigurator
 {

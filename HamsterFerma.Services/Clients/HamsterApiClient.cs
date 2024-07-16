@@ -1,11 +1,13 @@
-﻿using HamsterFerma.Models.BoostList;
+﻿using HamsterFerma.Models.BoostBuy;
+using HamsterFerma.Models.BoostList;
 using HamsterFerma.Models.CheckTask;
 using HamsterFerma.Models.Cipher;
 using HamsterFerma.Models.Config;
+using HamsterFerma.Models.Sync;
 using HamsterFerma.Models.Taps;
-using HamsterFerma.Models.Tasks;
+using HamsterFerma.Models.TaskList;
 using HamsterFerma.Models.UpgradeBuy;
-using HamsterFerma.Models.Upgrades;
+using HamsterFerma.Models.UpgradeList;
 using HamsterFerma.Services.Configs;
 using Microsoft.Extensions.Logging;
 using System.Text;

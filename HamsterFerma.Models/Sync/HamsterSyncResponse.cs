@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using HamsterFerma.Models.User;
 
-namespace HamsterFerma.Models.Taps;
+namespace HamsterFerma.Models.Sync;
 
 public sealed class HamsterSyncResponse
 {
