@@ -1,5 +1,6 @@
 ﻿using HamsterFerma.Models.Taps;
 using HamsterFerma.Services.Clients;
+using HamsterFerma.Services.Configs;
 using Microsoft.Extensions.Logging;
 using Quartz;
 
@@ -7,11 +8,15 @@ namespace HamsterFerma.Services.Jobs;
 
 public sealed class HamsterClickerWatchDog(IHamsterApiClient client, ILogger<HamsterClickerWatchDog> logger) : IJob
 {
-    public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, TimeZoneInfo timeZone)
+    public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
+        if (!config.AutoClick)
+        {
+            return;
+        }
         var key = CreateKey();
         options.AddJob<HamsterClickerWatchDog>(key)
-            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule("5 * * ? * * *", x => x.InTimeZone(timeZone)));
+            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule(config.ClickCron, x => x.InTimeZone(timeZone)));
     }
 
     public static JobKey CreateKey()

@@ -1,6 +1,7 @@
 ﻿using HamsterFerma.Models.BoostList;
 using HamsterFerma.Models.UpgradeBuy;
 using HamsterFerma.Services.Clients;
+using HamsterFerma.Services.Configs;
 using LinqKit;
 using Microsoft.Extensions.Logging;
 using Quartz;
@@ -9,11 +10,19 @@ namespace HamsterFerma.Services.Jobs;
 
 public sealed class HamsterBoostWatchDog(IHamsterApiClient client, ILogger<HamsterBoostWatchDog> logger) : IJob
 {
-    public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, TimeZoneInfo timeZone)
+    public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
+        if (!config.AutoBoost)
+        {
+            return;
+        }
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            return;
+        }
         var key = CreateKey();
         options.AddJob<HamsterBoostWatchDog>(key)
-            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule("0 * * ? * * *", x => x.InTimeZone(timeZone)));
+            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule(config.BoostCron, x => x.InTimeZone(timeZone)));
     }
 
     public static JobKey CreateKey()

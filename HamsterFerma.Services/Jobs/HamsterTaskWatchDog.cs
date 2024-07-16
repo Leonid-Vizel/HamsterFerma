@@ -1,4 +1,5 @@
 ﻿using HamsterFerma.Services.Clients;
+using HamsterFerma.Services.Configs;
 using Microsoft.Extensions.Logging;
 using Quartz;
 
@@ -11,11 +12,15 @@ public sealed class HamsterTaskWatchDog(IHamsterApiClient client, ILogger<Hamste
         "invite_friends"
     ];
 
-    public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, TimeZoneInfo timeZone)
+    public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
+        if (!config.AutoTask)
+        {
+            return;
+        }
         var key = CreateKey();
         options.AddJob<HamsterTaskWatchDog>(key)
-            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule("0 0 * ? * * *", x => x.InTimeZone(timeZone)));
+            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule(config.TaskCron, x => x.InTimeZone(timeZone)));
     }
 
     public static JobKey CreateKey()

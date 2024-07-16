@@ -7,6 +7,7 @@ using HamsterFerma.Models.Tasks;
 using HamsterFerma.Models.UpgradeBuy;
 using HamsterFerma.Models.Upgrades;
 using HamsterFerma.Services.Configs;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 
@@ -30,16 +31,26 @@ public interface IHamsterApiClient
 }
 
 public sealed class HamsterApiClient(AuthBearerConfig config,
-                                     IHttpClientFactory clientFactory) : IHamsterApiClient
+                                     IHttpClientFactory clientFactory,
+                                     ILogger<HamsterApiClient> logger) : IHamsterApiClient
 {
+    private static readonly string _tokenErrorMessage = "Заполните Token, ферма не может работать без авторизационного Bearer-токена (ознакомьтесь с Readme.md)!";
+    private static readonly string _codeUnsuccessfulErrorMessage = "Обращение к серверу не привело к успешному ответу!";
+
     public AuthBearerConfig Config => config;
     public async Task<HamsterUpgradeListResponse?> GetUpgradeListAsync()
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/upgrades-for-buy", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(GetUpgradeListAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -49,11 +60,17 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<HamsterBoostListResponse?> GetBoostListAsync()
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/boosts-for-buy", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(GetBoostListAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -63,11 +80,17 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<HamsterTaskListResponse?> GetTaskListAsync()
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/list-tasks", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(GetTaskListAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -77,11 +100,17 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<HamsterSyncResponse?> SyncAsync()
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/sync", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(SyncAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -91,11 +120,17 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<HamsterConfigResponse?> ConfigAsync()
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/config", null);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(ConfigAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -105,13 +140,19 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<HamsterTapResponse?> TapAsync(HamsterTapRequest request)
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/tap", serializedRequestContent);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(TapAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -121,13 +162,19 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<HamsterCheckTaskResponse?> CheckTaskAsync(HamsterCheckTaskRequest request)
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/check-task", serializedRequestContent);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(CheckTaskAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -140,13 +187,19 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(HamsterUpgradeBuyRequest request)
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/buy-upgrade", serializedRequestContent);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(BuyUpgradeAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -156,13 +209,19 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<HamsterBoostBuyResponse?> BuyBoostAsync(HamsterBoostBuyRequest request)
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/buy-boost", serializedRequestContent);
         if (!httpResponse.IsSuccessStatusCode)
         {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(BuyBoostAsync)}] {_codeUnsuccessfulErrorMessage}");
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
@@ -172,8 +231,13 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
 
     public async Task<bool> ClaimDailyCipher(HamsterCipherRequest request)
     {
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            return false;
+        }
         using var client = clientFactory.CreateClient("Hamster");
-        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Auth}");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
         var serializedRequest = JsonSerializer.Serialize(request);
         var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
         var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/claim-daily-cipher", serializedRequestContent);

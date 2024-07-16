@@ -1,4 +1,5 @@
 ﻿using HamsterFerma.Services.Clients;
+using HamsterFerma.Services.Configs;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using System.Text;
@@ -7,11 +8,15 @@ namespace HamsterFerma.Services.Jobs;
 
 public sealed class HamsterCipherWatchDog(IHamsterApiClient client, ILogger<HamsterCipherWatchDog> logger) : IJob
 {
-    public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, TimeZoneInfo timeZone)
+    public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
+        if (!config.AutoCipher)
+        {
+            return;
+        }
         var key = CreateKey();
         options.AddJob<HamsterCipherWatchDog>(key)
-            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule("0 5 22 ? * * *", x => x.InTimeZone(timeZone)));
+            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule(config.CipherCron, x => x.InTimeZone(timeZone)));
     }
 
     public static JobKey CreateKey()
