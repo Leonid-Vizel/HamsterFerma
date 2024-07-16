@@ -22,7 +22,7 @@ public sealed class HamsterCipherWatchDog(IHamsterApiClient client,
         {
             return;
         }
-        var key = CreateKey();
+        var key = CreateKey(config.Tag);
         options.AddJob<HamsterCipherWatchDog>(key, job => job
             .UsingJobData(nameof(AuthBearerConfig), JsonSerializer.Serialize(config))
         ).AddTrigger(trigger => trigger
@@ -31,8 +31,8 @@ public sealed class HamsterCipherWatchDog(IHamsterApiClient client,
         );
     }
 
-    public static JobKey CreateKey()
-        => JobKey.Create(nameof(HamsterCipherWatchDog));
+    public static JobKey CreateKey(string tag)
+        => JobKey.Create(nameof(HamsterCipherWatchDog), tag);
 
     public async Task Execute(IJobExecutionContext context)
     {

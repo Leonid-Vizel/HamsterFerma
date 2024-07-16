@@ -21,7 +21,7 @@ public class HamsterUpgradeWatchDog(IHamsterApiClient client,
         {
             return;
         }
-        var key = CreateKey();
+        var key = CreateKey(config.Tag);
         options.AddJob<HamsterUpgradeWatchDog>(key, job => job
             .UsingJobData(nameof(AuthBearerConfig), JsonSerializer.Serialize(config))
         ).AddTrigger(trigger => trigger
@@ -30,8 +30,8 @@ public class HamsterUpgradeWatchDog(IHamsterApiClient client,
         );
     }
 
-    public static JobKey CreateKey()
-        => JobKey.Create(nameof(HamsterUpgradeWatchDog));
+    public static JobKey CreateKey(string tag)
+        => JobKey.Create(nameof(HamsterUpgradeWatchDog), tag);
 
     public async Task Execute(IJobExecutionContext context)
     {
