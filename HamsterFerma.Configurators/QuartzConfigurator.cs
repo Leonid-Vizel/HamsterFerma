@@ -33,6 +33,7 @@ public static class QuartzConfigurator
                 {
                     HamsterClickerWatchDog.ConfigureFor(options, config, zone);
                     HamsterUpgradeWatchDog.ConfigureFor(options, config, zone);
+                    HamsterConditionalUpgradeWatchDog.ConfigureFor(options, config, zone);
                     HamsterBoostWatchDog.ConfigureFor(options, config, zone);
                     HamsterCipherWatchDog.ConfigureFor(options, config, zone);
                     HamsterTaskWatchDog.ConfigureFor(options, config, zone);

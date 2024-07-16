@@ -10,7 +10,6 @@ using HamsterFerma.Services.Configs;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace HamsterFerma.Services.Clients;
 
@@ -208,6 +207,7 @@ public sealed class HamsterApiClient(IHttpClientFactory clientFactory,
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
         var responseJson = await JsonSerializer.DeserializeAsync<HamsterUpgradeBuyResponse>(responseStream);
+        await Task.Delay(200);
         return responseJson;
     }
 

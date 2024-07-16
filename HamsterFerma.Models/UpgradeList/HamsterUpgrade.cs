@@ -17,7 +17,7 @@ public class HamsterUpgrade
     public int ProfitPerHour { get; set; }
 
     [JsonPropertyName("condition")]
-    public HamsterUpgradeCondition Condition { get; set; } = null!;
+    public HamsterUpgradeCondition? Condition { get; set; } = null!;
 
     [JsonPropertyName("section")]
     public string Section { get; set; } = null!;

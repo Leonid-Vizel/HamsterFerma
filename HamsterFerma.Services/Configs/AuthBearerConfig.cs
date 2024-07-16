@@ -16,6 +16,8 @@ public sealed class AuthBearerConfig
     public string ClickCron { get; set; } = "5 * * ? * * *";
     public bool AutoUpgrade { get; set; } = true;
     public string UpgradeCron { get; set; } = "10 * * ? * * *";
+    public bool AutoConditionalUpgrade { get; set; } = true;
+    public string ConditionalUpgradeCron { get; set; } = "15 * * ? * * *";
     public bool AutoCipher { get; set; } = true;
     public string CipherCron { get; set; } = "0 5 22 ? * * *";
     public bool AutoTask { get; set; } = true;

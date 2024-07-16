@@ -7,7 +7,9 @@ using System.Text.Json;
 
 namespace HamsterFerma.Services.Jobs;
 
-public class HamsterUpgradeWatchDog(IHamsterApiClient client, IAuthConfigDecoder configDecoder, ILogger<HamsterUpgradeWatchDog> logger) : IJob
+public class HamsterUpgradeWatchDog(IHamsterApiClient client,
+                                    IAuthConfigDecoder configDecoder,
+                                    ILogger<HamsterUpgradeWatchDog> logger) : IJob
 {
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
