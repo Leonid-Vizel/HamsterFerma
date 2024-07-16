@@ -7,7 +7,7 @@ public sealed class AuthBearerConfig
     public string Token { get; set; } = null!;
     public string Tag { get; set; } = "Default";
     public double MinBalance { get; set; } = 0;
-    public double UpgradeBuffer { get; set; } = 0;
+    public double ConditionalUpgradeBuffer { get; set; } = 0;
     public bool BuyClickLimitBoosts { get; set; } = false;
     public bool BuyUselessPerClickBoosts { get; set; } = false;
     public bool BuyClickFullLimitBoosts { get; set; } = true;

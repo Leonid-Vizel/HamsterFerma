@@ -1,12 +1,13 @@
-﻿using HamsterFerma.Models.UpgradeBuy;
-using HamsterFerma.Services.Clients;
+﻿using HamsterFerma.Services.Clients;
 using HamsterFerma.Services.Configs;
+using HamsterFerma.Services.Tools;
 using Microsoft.Extensions.Logging;
 using Quartz;
+using System.Text.Json;
 
 namespace HamsterFerma.Services.Jobs;
 
-public class HamsterUpgradeWatchDog(IHamsterApiClient client, ILogger<HamsterUpgradeWatchDog> logger) : IJob
+public class HamsterUpgradeWatchDog(IHamsterApiClient client, IAuthConfigDecoder configDecoder, ILogger<HamsterUpgradeWatchDog> logger) : IJob
 {
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
@@ -14,9 +15,17 @@ public class HamsterUpgradeWatchDog(IHamsterApiClient client, ILogger<HamsterUpg
         {
             return;
         }
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            return;
+        }
         var key = CreateKey();
-        options.AddJob<HamsterUpgradeWatchDog>(key)
-            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule(config.UpgradeCron, x => x.InTimeZone(timeZone)));
+        options.AddJob<HamsterUpgradeWatchDog>(key, job => job
+            .UsingJobData(nameof(AuthBearerConfig), JsonSerializer.Serialize(config))
+        ).AddTrigger(trigger => trigger
+            .ForJob(key)
+            .WithCronSchedule(config.UpgradeCron, x => x.InTimeZone(timeZone))
+        );
     }
 
     public static JobKey CreateKey()
@@ -24,16 +33,20 @@ public class HamsterUpgradeWatchDog(IHamsterApiClient client, ILogger<HamsterUpg
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var userData = (await client.SyncAsync())?.ClickerUser;
-        if (userData == null)
+        var config = configDecoder.Decode(context);
+        if (config == null)
         {
-            logger.LogError("Sync returned null!");
             return;
         }
-        var upgrageList = await client.GetUpgradeListAsync();
+
+        var userData = (await client.SyncAsync(config))?.ClickerUser;
+        if (userData == null)
+        {
+            return;
+        }
+        var upgrageList = await client.GetUpgradeListAsync(config);
         if (upgrageList == null)
         {
-            logger.LogError("UpgradeList returned null!");
             return;
         }
 
@@ -51,18 +64,18 @@ public class HamsterUpgradeWatchDog(IHamsterApiClient client, ILogger<HamsterUpg
         foreach (var upgrade in bests)
         {
             userData.BalanceCoins -= upgrade.Price;
-            if (userData.BalanceCoins <= client.Config.MinBalance)
+            if (userData.BalanceCoins <= config.MinBalance + config.ConditionalUpgradeBuffer)
             {
+                logger.LogInformation($"[Tag: {config.Tag}] Ожидаю ({actualBalance}/{upgrade.Price}) улучшение {upgrade.Name} с дельтой {upgrade.ProfitPerHourDelta}.");
                 break;
             }
             if (upgrade.CooldownSeconds != null && upgrade.CooldownSeconds != 0)
             {
-                logger.LogInformation($"Ожидаю ({actualBalance}/{upgrade.Price}) улучшение {upgrade.Name} по цене: {upgrade.Price} с дельтой {upgrade.ProfitPerHourDelta} через {(double)upgrade.CooldownSeconds / 60} минут.");
+                logger.LogInformation($"[Tag: {config.Tag}] Ожидаю ({actualBalance}/{upgrade.Price}) улучшение {upgrade.Name} с дельтой {upgrade.ProfitPerHourDelta} через {(double)upgrade.CooldownSeconds / 60} минут.");
                 continue;
             }
-            var buyRequest = new HamsterUpgradeBuyRequest(upgrade.Id);
-            logger.LogInformation($"Покупка улучшения {upgrade.Name} по цене: {upgrade.Price} с дельтой {upgrade.ProfitPerHourDelta}.");
-            await client.BuyUpgradeAsync(buyRequest);
+            logger.LogInformation($"[Tag: {config.Tag}] Покупка улучшения {upgrade.Name} по цене: {upgrade.Price} с дельтой {upgrade.ProfitPerHourDelta}.");
+            await client.BuyUpgradeAsync(config, upgrade.Id);
         }
     }
 }

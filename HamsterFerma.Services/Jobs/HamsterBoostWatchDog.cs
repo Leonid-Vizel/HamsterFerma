@@ -1,14 +1,17 @@
 ﻿using HamsterFerma.Models.BoostList;
-using HamsterFerma.Models.UpgradeBuy;
 using HamsterFerma.Services.Clients;
 using HamsterFerma.Services.Configs;
+using HamsterFerma.Services.Tools;
 using LinqKit;
 using Microsoft.Extensions.Logging;
 using Quartz;
+using System.Text.Json;
 
 namespace HamsterFerma.Services.Jobs;
 
-public sealed class HamsterBoostWatchDog(IHamsterApiClient client, ILogger<HamsterBoostWatchDog> logger) : IJob
+public sealed class HamsterBoostWatchDog(IHamsterApiClient client,
+                                         IAuthConfigDecoder configDecoder,
+                                         ILogger<HamsterBoostWatchDog> logger) : IJob
 {
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
@@ -21,8 +24,12 @@ public sealed class HamsterBoostWatchDog(IHamsterApiClient client, ILogger<Hamst
             return;
         }
         var key = CreateKey();
-        options.AddJob<HamsterBoostWatchDog>(key)
-            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule(config.BoostCron, x => x.InTimeZone(timeZone)));
+        options.AddJob<HamsterBoostWatchDog>(key, job => job
+            .UsingJobData(nameof(AuthBearerConfig), JsonSerializer.Serialize(config))
+        ).AddTrigger(trigger => trigger
+            .ForJob(key)
+            .WithCronSchedule(config.BoostCron, x => x.InTimeZone(timeZone))
+        );
     }
 
     public static JobKey CreateKey()
@@ -30,30 +37,34 @@ public sealed class HamsterBoostWatchDog(IHamsterApiClient client, ILogger<Hamst
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var userData = (await client.SyncAsync())?.ClickerUser;
-        if (userData == null)
+        var config =  configDecoder.Decode(context);
+        if (config == null)
         {
-            logger.LogError("Sync returned null!");
             return;
         }
 
-        var boostList = await client.GetBoostListAsync();
+        var userData = (await client.SyncAsync(config))?.ClickerUser;
+        if (userData == null)
+        {
+            return;
+        }
+
+        var boostList = await client.GetBoostListAsync(config);
         if (boostList == null)
         {
-            logger.LogError("BoostList returned null!");
             return;
         }
 
         var query = PredicateBuilder.New<HamsterBoost>();
-        if (client.Config.BuyUselessPerClickBoosts)
+        if (config.BuyUselessPerClickBoosts)
         {
             query = query.Or(x => x.EarnPerTapDelta > 0);
         }
-        if (client.Config.BuyClickLimitBoosts)
+        if (config.BuyClickLimitBoosts)
         {
             query = query.Or(x => x.MaxTapsDelta > 0);
         }
-        if (client.Config.BuyClickFullLimitBoosts)
+        if (config.BuyClickFullLimitBoosts)
         {
             query = query.Or(x => x.Price == 0);
         }
@@ -67,16 +78,14 @@ public sealed class HamsterBoostWatchDog(IHamsterApiClient client, ILogger<Hamst
         foreach (var boost in boosts)
         {
             userData.BalanceCoins -= boost.Price;
-            if (userData.BalanceCoins <= client.Config.MinBalance && boost.Price != 0)
+            if (userData.BalanceCoins <= config.MinBalance && boost.Price != 0)
             {
                 break;
             }
-            var buyRequest = new HamsterBoostBuyRequest(boost.Id);
-            logger.LogInformation($"Покупка буста {boost.Id} по цене: {boost.Price}.");
-            userData = (await client.BuyBoostAsync(buyRequest))?.ClickerUser;
+            logger.LogInformation($"[Tag: {config.Tag}] Покупка буста {boost.Id} по цене: {boost.Price}.");
+            userData = (await client.BuyBoostAsync(config, boost.Id))?.ClickerUser;
             if (userData == null)
             {
-                logger.LogError("Sync returned null!");
                 return;
             }
         }

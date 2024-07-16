@@ -1,6 +1,7 @@
 ﻿using HamsterFerma.Services.Clients;
 using HamsterFerma.Services.Configs;
 using HamsterFerma.Services.Jobs;
+using HamsterFerma.Services.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,12 +13,13 @@ public static class QuartzConfigurator
 {
     public static void Configure(IHostApplicationBuilder builder)
     {
-        var config = new AuthBearerConfig();
-        builder.Configuration.GetSection("Bearer").Bind(config);
+        var configs = new AuthBearerConfigCollection();
+        builder.Configuration.GetSection("Auth").Bind(configs);
 
         builder.Services
             .AddScoped<IHamsterApiClient, HamsterApiClient>()
-            .AddSingleton(config)
+            .AddSingleton<IAuthConfigDecoder, AuthConfigDecoder>()
+            .AddSingleton(configs)
             .AddQuartz(options =>
             {
                 options.InterruptJobsOnShutdown = true;
@@ -27,11 +29,14 @@ public static class QuartzConfigurator
                 });
                 options.UseInMemoryStore();
                 var zone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
-                HamsterClickerWatchDog.ConfigureFor(options, config, zone);
-                HamsterUpgradeWatchDog.ConfigureFor(options, config, zone);
-                HamsterBoostWatchDog.ConfigureFor(options, config, zone);
-                HamsterCipherWatchDog.ConfigureFor(options, config, zone);
-                HamsterTaskWatchDog.ConfigureFor(options, config, zone);
+                foreach (var config in configs)
+                {
+                    HamsterClickerWatchDog.ConfigureFor(options, config, zone);
+                    HamsterUpgradeWatchDog.ConfigureFor(options, config, zone);
+                    HamsterBoostWatchDog.ConfigureFor(options, config, zone);
+                    HamsterCipherWatchDog.ConfigureFor(options, config, zone);
+                    HamsterTaskWatchDog.ConfigureFor(options, config, zone);
+                }
             }).AddQuartzHostedService(options =>
             {
                 options.WaitForJobsToComplete = true;

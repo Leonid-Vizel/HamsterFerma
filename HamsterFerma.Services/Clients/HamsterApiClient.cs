@@ -10,39 +10,40 @@ using HamsterFerma.Services.Configs;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace HamsterFerma.Services.Clients;
 
 public interface IHamsterApiClient
 {
-    AuthBearerConfig Config { get; }
-    Task<HamsterUpgradeListResponse?> GetUpgradeListAsync();
-    Task<HamsterBoostListResponse?> GetBoostListAsync();
-    Task<HamsterTaskListResponse?> GetTaskListAsync();
-    Task<HamsterCheckTaskResponse?> CheckTaskAsync(HamsterCheckTaskRequest request);
-    Task<HamsterCheckTaskResponse?> CheckTaskAsync(string taskId);
-    Task<HamsterSyncResponse?> SyncAsync();
-    Task<HamsterConfigResponse?> ConfigAsync();
-    Task<bool> ClaimDailyCipher(HamsterCipherRequest request);
-    Task<bool> ClaimDailyCipher(string cipher);
-    Task<HamsterTapResponse?> TapAsync(HamsterTapRequest request);
-    Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(HamsterUpgradeBuyRequest request);
-    Task<HamsterBoostBuyResponse?> BuyBoostAsync(HamsterBoostBuyRequest request);
+    Task<HamsterUpgradeListResponse?> GetUpgradeListAsync(AuthBearerConfig config);
+    Task<HamsterBoostListResponse?> GetBoostListAsync(AuthBearerConfig config);
+    Task<HamsterTaskListResponse?> GetTaskListAsync(AuthBearerConfig config);
+    Task<HamsterCheckTaskResponse?> CheckTaskAsync(AuthBearerConfig config, HamsterCheckTaskRequest request);
+    Task<HamsterCheckTaskResponse?> CheckTaskAsync(AuthBearerConfig config, string taskId);
+    Task<HamsterSyncResponse?> SyncAsync(AuthBearerConfig config);
+    Task<HamsterConfigResponse?> ConfigAsync(AuthBearerConfig config);
+    Task<bool> ClaimDailyCipher(AuthBearerConfig config, HamsterCipherRequest request);
+    Task<bool> ClaimDailyCipher(AuthBearerConfig config, string cipher);
+    Task<HamsterTapResponse?> TapAsync(AuthBearerConfig config, HamsterTapRequest request);
+    Task<HamsterTapResponse?> TapAsync(AuthBearerConfig config, int tapCount);
+    Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(AuthBearerConfig config, HamsterUpgradeBuyRequest request);
+    Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(AuthBearerConfig config, string upgradeId);
+    Task<HamsterBoostBuyResponse?> BuyBoostAsync(AuthBearerConfig config, HamsterBoostBuyRequest request);
+    Task<HamsterBoostBuyResponse?> BuyBoostAsync(AuthBearerConfig config, string boostId);
 }
 
-public sealed class HamsterApiClient(AuthBearerConfig config,
-                                     IHttpClientFactory clientFactory,
+public sealed class HamsterApiClient(IHttpClientFactory clientFactory,
                                      ILogger<HamsterApiClient> logger) : IHamsterApiClient
 {
     private static readonly string _tokenErrorMessage = "Заполните Token, ферма не может работать без авторизационного Bearer-токена (ознакомьтесь с Readme.md)!";
     private static readonly string _codeUnsuccessfulErrorMessage = "Обращение к серверу не привело к успешному ответу!";
 
-    public AuthBearerConfig Config => config;
-    public async Task<HamsterUpgradeListResponse?> GetUpgradeListAsync()
+    public async Task<HamsterUpgradeListResponse?> GetUpgradeListAsync(AuthBearerConfig config)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -58,11 +59,11 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public async Task<HamsterBoostListResponse?> GetBoostListAsync()
+    public async Task<HamsterBoostListResponse?> GetBoostListAsync(AuthBearerConfig config)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -78,11 +79,11 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public async Task<HamsterTaskListResponse?> GetTaskListAsync()
+    public async Task<HamsterTaskListResponse?> GetTaskListAsync(AuthBearerConfig config)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -98,11 +99,11 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public async Task<HamsterSyncResponse?> SyncAsync()
+    public async Task<HamsterSyncResponse?> SyncAsync(AuthBearerConfig config)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -118,11 +119,11 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public async Task<HamsterConfigResponse?> ConfigAsync()
+    public async Task<HamsterConfigResponse?> ConfigAsync(AuthBearerConfig config)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -138,11 +139,11 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public async Task<HamsterTapResponse?> TapAsync(HamsterTapRequest request)
+    public async Task<HamsterTapResponse?> TapAsync(AuthBearerConfig config, HamsterTapRequest request)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -160,11 +161,14 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public async Task<HamsterCheckTaskResponse?> CheckTaskAsync(HamsterCheckTaskRequest request)
+    public Task<HamsterTapResponse?> TapAsync(AuthBearerConfig config, int tapCount)
+        => TapAsync(config, new HamsterTapRequest(tapCount));
+
+    public async Task<HamsterCheckTaskResponse?> CheckTaskAsync(AuthBearerConfig config, HamsterCheckTaskRequest request)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -182,14 +186,14 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public Task<HamsterCheckTaskResponse?> CheckTaskAsync(string taskId)
-        => CheckTaskAsync(new HamsterCheckTaskRequest(taskId));
+    public Task<HamsterCheckTaskResponse?> CheckTaskAsync(AuthBearerConfig config, string taskId)
+        => CheckTaskAsync(config, new HamsterCheckTaskRequest(taskId));
 
-    public async Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(HamsterUpgradeBuyRequest request)
+    public async Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(AuthBearerConfig config, HamsterUpgradeBuyRequest request)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -207,11 +211,14 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public async Task<HamsterBoostBuyResponse?> BuyBoostAsync(HamsterBoostBuyRequest request)
+    public Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(AuthBearerConfig config, string upgradeId)
+        => BuyUpgradeAsync(config, new HamsterUpgradeBuyRequest(upgradeId));
+
+    public async Task<HamsterBoostBuyResponse?> BuyBoostAsync(AuthBearerConfig config, HamsterBoostBuyRequest request)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -229,11 +236,14 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return responseJson;
     }
 
-    public async Task<bool> ClaimDailyCipher(HamsterCipherRequest request)
+    public Task<HamsterBoostBuyResponse?> BuyBoostAsync(AuthBearerConfig config, string boostId)
+        => BuyBoostAsync(config, new HamsterBoostBuyRequest(boostId));
+
+    public async Task<bool> ClaimDailyCipher(AuthBearerConfig config, HamsterCipherRequest request)
     {
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config?.Token))
         {
-            logger.LogError($"[Tag: {config.Tag}] {_tokenErrorMessage}");
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return false;
         }
         using var client = clientFactory.CreateClient("Hamster");
@@ -244,6 +254,6 @@ public sealed class HamsterApiClient(AuthBearerConfig config,
         return httpResponse.IsSuccessStatusCode;
     }
 
-    public Task<bool> ClaimDailyCipher(string cipher)
-        => ClaimDailyCipher(new HamsterCipherRequest(cipher));
+    public Task<bool> ClaimDailyCipher(AuthBearerConfig config, string cipher)
+        => ClaimDailyCipher(config, new HamsterCipherRequest(cipher));
 }

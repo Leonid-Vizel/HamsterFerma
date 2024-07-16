@@ -1,11 +1,15 @@
 ﻿using HamsterFerma.Services.Clients;
 using HamsterFerma.Services.Configs;
+using HamsterFerma.Services.Tools;
 using Microsoft.Extensions.Logging;
 using Quartz;
+using System.Text.Json;
 
 namespace HamsterFerma.Services.Jobs;
 
-public sealed class HamsterTaskWatchDog(IHamsterApiClient client, ILogger<HamsterTaskWatchDog> logger) : IJob
+public sealed class HamsterTaskWatchDog(IHamsterApiClient client,
+                                        IAuthConfigDecoder configDecoder,
+                                        ILogger<HamsterTaskWatchDog> logger) : IJob
 {
     private static string[] ignoreTasks =
     [
@@ -18,9 +22,17 @@ public sealed class HamsterTaskWatchDog(IHamsterApiClient client, ILogger<Hamste
         {
             return;
         }
+        if (string.IsNullOrEmpty(config.Token))
+        {
+            return;
+        }
         var key = CreateKey();
-        options.AddJob<HamsterTaskWatchDog>(key)
-            .AddTrigger(trigger => trigger.ForJob(key).WithCronSchedule(config.TaskCron, x => x.InTimeZone(timeZone)));
+        options.AddJob<HamsterTaskWatchDog>(key, job => job
+            .UsingJobData(nameof(AuthBearerConfig), JsonSerializer.Serialize(config))
+        ).AddTrigger(trigger => trigger
+            .ForJob(key)
+            .WithCronSchedule(config.TaskCron, x => x.InTimeZone(timeZone))
+        );
     }
 
     public static JobKey CreateKey()
@@ -28,10 +40,15 @@ public sealed class HamsterTaskWatchDog(IHamsterApiClient client, ILogger<Hamste
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var taskList = await client.GetTaskListAsync();
+        var config = configDecoder.Decode(context);
+        if (config == null)
+        {
+            return;
+        }
+
+        var taskList = await client.GetTaskListAsync(config);
         if (taskList == null)
         {
-            logger.LogError($"{nameof(client.GetTaskListAsync)} returned null!");
             return;
         }
         var nonCompletedTasks = taskList.Tasks
@@ -42,13 +59,12 @@ public sealed class HamsterTaskWatchDog(IHamsterApiClient client, ILogger<Hamste
             .ToList();
         foreach (var task in nonCompletedTasks)
         {
-            var completedTask = await client.CheckTaskAsync(task.Id);
+            var completedTask = await client.CheckTaskAsync(config, task.Id);
             if (completedTask == null)
             {
-                logger.LogError($"{nameof(client.CheckTaskAsync)} returned null (taskId:{task.Id})!");
                 return;
             }
-            logger.LogInformation($"Completed task: {completedTask.Task.Id} ({completedTask.Task.RewardCoins} coins)!");
+            logger.LogInformation($"[Tag: {config.Tag}] Выполнено задание: {completedTask.Task.Id} ({completedTask.Task.RewardCoins} coins)!");
         }
     }
 }
