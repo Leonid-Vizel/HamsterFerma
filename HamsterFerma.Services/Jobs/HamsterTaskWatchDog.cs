@@ -53,7 +53,7 @@ public sealed class HamsterTaskWatchDog(IHamsterApiClient client,
         }
         var nonCompletedTasks = taskList.Tasks
             .Where(x => x.ChannelId == null)
-            .Where(x => !x.IsCompleted)
+            .Where(x => !x.IsCompleted || x.Days != null)
             .Where(x => x.RemainSeconds == 0 || x.RemainSeconds == null)
             .Where(x => !ignoreTasks.Contains(x.Id))
             .ToList();
