@@ -56,6 +56,7 @@ public sealed class HamsterApiClient(IHttpClientFactory clientFactory,
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
+        var a = await httpResponse.Content.ReadAsStringAsync();
         var responseJson = await JsonSerializer.DeserializeAsync<HamsterUpgradeListResponse>(responseStream);
         return responseJson;
     }
