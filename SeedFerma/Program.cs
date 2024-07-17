@@ -1,4 +1,4 @@
-﻿using HamsterFerma.Configurators;
+﻿using SeedFerma.Configurators;
 using Microsoft.Extensions.Hosting;
 using Weasel.Configurators.Common;
 

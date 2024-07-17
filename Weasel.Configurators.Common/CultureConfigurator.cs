@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace HamsterFerma.Configurators;
+namespace Weasel.Configurators.Common;
 
 public static class CultureConfigurator
 {

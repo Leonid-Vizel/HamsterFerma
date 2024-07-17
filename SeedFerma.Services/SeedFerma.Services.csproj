@@ -10,12 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Quartz.AspNetCore" Version="3.9.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\HamsterFerma.Services\HamsterFerma.Services.csproj" />
-    <ProjectReference Include="..\Weasel.Configurators.Common\Weasel.Configurators.Common.csproj" />
+    <ProjectReference Include="..\SeedFerma.Models\SeedFerma.Models.csproj" />
   </ItemGroup>
 
 </Project>

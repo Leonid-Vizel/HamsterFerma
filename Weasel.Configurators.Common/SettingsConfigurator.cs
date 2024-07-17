@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace HamsterFerma.Configurators;
+namespace Weasel.Configurators.Common;
 
 public static class SettingsConfigurator
 {
