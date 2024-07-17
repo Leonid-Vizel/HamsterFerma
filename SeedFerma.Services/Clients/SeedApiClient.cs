@@ -91,7 +91,7 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
         }
         using var client = clientFactory.CreateClient("Seed");
         client.DefaultRequestHeaders.Add("telegram-data", config.TelegramData);
-        var httpResponse = await client.PostAsync("https://elb.seeddao.org/api/v1/worms", null);
+        var httpResponse = await client.GetAsync("https://elb.seeddao.org/api/v1/worms");
         if (!httpResponse.IsSuccessStatusCode)
         {
             logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(GetWormListAsync)}] {_codeUnsuccessfulErrorMessage}");

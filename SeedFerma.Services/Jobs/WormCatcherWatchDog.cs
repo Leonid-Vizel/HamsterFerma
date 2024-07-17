@@ -13,7 +13,7 @@ public sealed class WormCatcherWatchDog(ISeedApiClient client,
 {
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
-        if (!config.AutoClaim)
+        if (!config.AutoCatch)
         {
             return;
         }
@@ -26,7 +26,7 @@ public sealed class WormCatcherWatchDog(ISeedApiClient client,
             .UsingJobData(nameof(AuthBearerConfig), JsonSerializer.Serialize(config))
         ).AddTrigger(trigger => trigger
             .ForJob(key)
-            .WithCronSchedule(config.ClaimCron, x => x.InTimeZone(timeZone))
+            .WithCronSchedule(config.CatchCron, x => x.InTimeZone(timeZone))
         );
     }
 
@@ -46,7 +46,7 @@ public sealed class WormCatcherWatchDog(ISeedApiClient client,
         {
             return;
         }
-        if (!worms.Data.IsCaught)
+        if (worms.Data.IsCaught)
         {
             return;
         }
