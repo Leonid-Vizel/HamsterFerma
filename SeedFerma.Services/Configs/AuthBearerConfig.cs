@@ -11,4 +11,6 @@ public sealed class AuthBearerConfig
     public bool AutoMarket { get; set; } = true;
     public string ClaimCron { get; set; } = "0 0 * ? * * *";
     public bool AutoClaim { get; set; } = true;
+    public string CatchCron { get; set; } = "0 1 * ? * * *";
+    public bool AutoCatch { get; set; } = true;
 }

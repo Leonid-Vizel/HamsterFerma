@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SeedFerma.Models.MarketList;
 using SeedFerma.Models.SeedClaim;
+using SeedFerma.Models.WormsList;
 using SeedFerma.Services.Configs;
 using System.Text.Json;
 
@@ -8,7 +9,10 @@ namespace SeedFerma.Services.Clients;
 
 public interface ISeedApiClient
 {
+    Task<SeedMarketListResponse?> GetMarketListAsync(AuthBearerConfig config, SeedMarketListRequest request);
     Task<SeedClaimResponse?> ClaimAsync(AuthBearerConfig config);
+    Task<string?> CatchAsync(AuthBearerConfig config);
+    Task<WormsListResponse?> GetWormListAsync(AuthBearerConfig config);
 }
 
 public sealed class SeedApiClient(IHttpClientFactory clientFactory,
@@ -24,7 +28,7 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
             logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
-        using var client = clientFactory.CreateClient("Hamster");
+        using var client = clientFactory.CreateClient("Seed");
         client.DefaultRequestHeaders.Add("telegram-data", config.TelegramData);
         var httpResponse = await client.PostAsync("https://elb.seeddao.org/api/v1/seed/claim", null);
         if (!httpResponse.IsSuccessStatusCode)
@@ -33,8 +37,68 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
-        var a = await httpResponse.Content.ReadAsStringAsync();
         var responseJson = await JsonSerializer.DeserializeAsync<SeedClaimResponse>(responseStream);
+        return responseJson;
+    }
+
+    public async Task<string?> CatchAsync(AuthBearerConfig config)
+    {
+        if (string.IsNullOrEmpty(config?.TelegramData))
+        {
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
+        using var client = clientFactory.CreateClient("Seed");
+        client.DefaultRequestHeaders.Add("telegram-data", config.TelegramData);
+        var httpResponse = await client.PostAsync("https://elb.seeddao.org/api/v1/worms/catch", null);
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(CatchAsync)}] {_codeUnsuccessfulErrorMessage}");
+            return null;
+        }
+        using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
+        var a = await httpResponse.Content.ReadAsStringAsync();
+        //var responseJson = await JsonSerializer.DeserializeAsync<SeedClaimResponse>(responseStream);
+        return a;
+    }
+
+    public async Task<SeedClaimResponse?> BuyAsync(AuthBearerConfig config)
+    {
+        if (string.IsNullOrEmpty(config?.TelegramData))
+        {
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
+        using var client = clientFactory.CreateClient("Seed");
+        client.DefaultRequestHeaders.Add("telegram-data", config.TelegramData);
+        var httpResponse = await client.PostAsync("https://elb.seeddao.org/api/v1/worms/catch", null);
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(BuyAsync)}] {_codeUnsuccessfulErrorMessage}");
+            return null;
+        }
+        using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
+        var responseJson = await JsonSerializer.DeserializeAsync<SeedClaimResponse>(responseStream);
+        return responseJson;
+    }
+
+    public async Task<WormsListResponse?> GetWormListAsync(AuthBearerConfig config)
+    {
+        if (string.IsNullOrEmpty(config?.TelegramData))
+        {
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
+            return null;
+        }
+        using var client = clientFactory.CreateClient("Seed");
+        client.DefaultRequestHeaders.Add("telegram-data", config.TelegramData);
+        var httpResponse = await client.PostAsync("https://elb.seeddao.org/api/v1/worms", null);
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            logger.LogError($"[Tag: {config.Tag}] [Method: {nameof(GetWormListAsync)}] {_codeUnsuccessfulErrorMessage}");
+            return null;
+        }
+        using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
+        var responseJson = await JsonSerializer.DeserializeAsync<WormsListResponse>(responseStream);
         return responseJson;
     }
 
@@ -45,7 +109,7 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
             logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
             return null;
         }
-        using var client = clientFactory.CreateClient("Hamster");
+        using var client = clientFactory.CreateClient("Seed");
         client.DefaultRequestHeaders.Add("telegram-data", config.TelegramData);
         var queryString = JsonSerializer
             .Deserialize<IDictionary<string, object?>>(JsonSerializer.Serialize(request))?
@@ -64,7 +128,6 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
-        var a = await httpResponse.Content.ReadAsStringAsync();
         var responseJson = await JsonSerializer.DeserializeAsync<SeedMarketListResponse>(responseStream);
         return responseJson;
     }

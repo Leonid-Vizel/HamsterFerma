@@ -1,11 +1,10 @@
-﻿using HamsterFerma.Services.Clients;
-using HamsterFerma.Services.Configs;
-using HamsterFerma.Services.Jobs;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 using SeedFerma.Services.Clients;
+using SeedFerma.Services.Configs;
+using SeedFerma.Services.Jobs;
 using SeedFerma.Services.Tools;
 
 namespace SeedFerma.Configurators;
@@ -20,7 +19,6 @@ public static class QuartzConfigurator
         builder.Services
             .AddScoped<ISeedApiClient, SeedApiClient>()
             .AddSingleton<IAuthConfigDecoder, AuthConfigDecoder>()
-            .AddSingleton<IHamsterCipherDecoder, HamsterCipherDecoder>()
             .AddSingleton(configs)
             .AddQuartz(options =>
             {
@@ -33,17 +31,15 @@ public static class QuartzConfigurator
                 var zone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
                 foreach (var config in configs)
                 {
-                    HamsterClickerWatchDog.ConfigureFor(options, config, zone);
-                    HamsterUpgradeWatchDog.ConfigureFor(options, config, zone);
-                    HamsterConditionalUpgradeWatchDog.ConfigureFor(options, config, zone);
-                    HamsterBoostWatchDog.ConfigureFor(options, config, zone);
-                    HamsterCipherWatchDog.ConfigureFor(options, config, zone);
-                    HamsterTaskWatchDog.ConfigureFor(options, config, zone);
+                    SeedClaimerWatchDog.ConfigureFor(options, config, zone);
+                    WormCatcherWatchDog.ConfigureFor(options, config, zone);
+                    //SeedConsumerWatchDog.ConfigureFor(options, config, zone);
+                    //SeedSellerWatchDog.ConfigureFor(options, config, zone);
                 }
             }).AddQuartzHostedService(options =>
             {
                 options.WaitForJobsToComplete = true;
-            }).AddHttpClient("Hamster", x =>
+            }).AddHttpClient("Seed", x =>
             {
                 x.DefaultRequestHeaders.Add("accept", "*/*");
                 x.DefaultRequestHeaders.Add("accept-language", "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,en-GB;q=0.6,zh-TW;q=0.5,zh-CN;q=0.4,zh;q=0.3");
