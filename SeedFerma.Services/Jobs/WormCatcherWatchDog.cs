@@ -51,7 +51,10 @@ public sealed class WormCatcherWatchDog(ISeedApiClient client,
             return;
         }
         var caughtResult = await client.CatchAsync(config);
-        logger.LogInformation($"[Tag: {config.Tag}] {caughtResult}");
-        logger.LogInformation($"[Tag: {config.Tag}] Червяк ({worms.Data.Type}) пойман!");
+        if (caughtResult == null)
+        {
+            return;
+        }
+        logger.LogInformation($"[Tag: {config.Tag}] Червяк ({caughtResult.Data.Type}) пойман!");
     }
 }

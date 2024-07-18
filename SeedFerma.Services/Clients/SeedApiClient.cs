@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SeedFerma.Models.MarketList;
 using SeedFerma.Models.SeedClaim;
+using SeedFerma.Models.WormCatch;
 using SeedFerma.Models.WormsList;
 using SeedFerma.Services.Configs;
 using System.Text.Json;
@@ -9,9 +10,9 @@ namespace SeedFerma.Services.Clients;
 
 public interface ISeedApiClient
 {
-    Task<SeedMarketListResponse?> GetMarketListAsync(AuthBearerConfig config, SeedMarketListRequest request);
+    Task<MarketListResponse?> GetMarketListAsync(AuthBearerConfig config, MarketListRequest request);
     Task<SeedClaimResponse?> ClaimAsync(AuthBearerConfig config);
-    Task<string?> CatchAsync(AuthBearerConfig config);
+    Task<WormCatchResponse?> CatchAsync(AuthBearerConfig config);
     Task<WormsListResponse?> GetWormListAsync(AuthBearerConfig config);
 }
 
@@ -41,7 +42,7 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
         return responseJson;
     }
 
-    public async Task<string?> CatchAsync(AuthBearerConfig config)
+    public async Task<WormCatchResponse?> CatchAsync(AuthBearerConfig config)
     {
         if (string.IsNullOrEmpty(config?.TelegramData))
         {
@@ -57,9 +58,8 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
-        var a = await httpResponse.Content.ReadAsStringAsync();
-        //var responseJson = await JsonSerializer.DeserializeAsync<SeedClaimResponse>(responseStream);
-        return a;
+        var responseJson = await JsonSerializer.DeserializeAsync<WormCatchResponse>(responseStream);
+        return responseJson;
     }
 
     public async Task<SeedClaimResponse?> BuyAsync(AuthBearerConfig config)
@@ -102,7 +102,7 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
         return responseJson;
     }
 
-    public async Task<SeedMarketListResponse?> GetMarketListAsync(AuthBearerConfig config, SeedMarketListRequest request)
+    public async Task<MarketListResponse?> GetMarketListAsync(AuthBearerConfig config, MarketListRequest request)
     {
         if (string.IsNullOrEmpty(config?.TelegramData))
         {
@@ -128,7 +128,7 @@ public sealed class SeedApiClient(IHttpClientFactory clientFactory,
             return null;
         }
         using var responseStream = await httpResponse.Content.ReadAsStreamAsync();
-        var responseJson = await JsonSerializer.DeserializeAsync<SeedMarketListResponse>(responseStream);
+        var responseJson = await JsonSerializer.DeserializeAsync<MarketListResponse>(responseStream);
         return responseJson;
     }
 }

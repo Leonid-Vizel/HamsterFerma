@@ -2,7 +2,7 @@
 
 namespace SeedFerma.Models.MarketList;
 
-public sealed class SeedMarketListRequest
+public sealed class MarketListRequest
 {
     [JsonPropertyName("market_type")]
     public string MarketType { get; set; } = null!;

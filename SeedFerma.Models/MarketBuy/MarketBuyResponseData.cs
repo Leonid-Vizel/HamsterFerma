@@ -1,5 +1,5 @@
 ﻿namespace SeedFerma.Models.MarketBuy;
 
-internal class MarketBuyResponseData
+public sealed class MarketBuyResponseData
 {
 }

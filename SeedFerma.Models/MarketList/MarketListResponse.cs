@@ -44,7 +44,7 @@ public class SeedMarketListResponseItem
     public DateTime UpdatedAt { get; set; }
 }
 
-public class SeedMarketListResponse
+public class MarketListResponse
 {
     [JsonPropertyName("data")]
     public SeedMarketListResponseData Data { get; set; } = null!;
