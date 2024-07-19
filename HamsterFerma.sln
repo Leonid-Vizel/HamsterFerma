@@ -23,17 +23,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weasel.Farmer.Services", "W
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Seed", "Seed", "{BC8BD71B-9AE0-44B6-BDD3-AEA6C8DE54FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeedFerma", "SeedFerma\SeedFerma.csproj", "{EC1BBB2A-B18D-4B56-85D3-6565FC85429A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeedFerma", "SeedFerma\SeedFerma.csproj", "{EC1BBB2A-B18D-4B56-85D3-6565FC85429A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeedFerma.Configurators", "SeedFerma.Configurators\SeedFerma.Configurators.csproj", "{CD3FCA83-B531-44F2-9F2C-C44715B4F997}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeedFerma.Configurators", "SeedFerma.Configurators\SeedFerma.Configurators.csproj", "{CD3FCA83-B531-44F2-9F2C-C44715B4F997}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeedFerma.Models", "SeedFerma.Models\SeedFerma.Models.csproj", "{89E10014-7BDD-4958-A71D-8435A5FBE75D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeedFerma.Models", "SeedFerma.Models\SeedFerma.Models.csproj", "{89E10014-7BDD-4958-A71D-8435A5FBE75D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeedFerma.Services", "SeedFerma.Services\SeedFerma.Services.csproj", "{C22A7CC9-A192-44B0-B8C6-5B47112D80B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeedFerma.Services", "SeedFerma.Services\SeedFerma.Services.csproj", "{C22A7CC9-A192-44B0-B8C6-5B47112D80B6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{0F0EE1B5-DB6E-4522-B1C4-9392628C27D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weasel.Configurators.Common", "Weasel.Configurators.Common\Weasel.Configurators.Common.csproj", "{1BD59557-2D40-42F1-A0E0-E4108E579511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weasel.Configurators.Common", "Weasel.Configurators.Common\Weasel.Configurators.Common.csproj", "{1BD59557-2D40-42F1-A0E0-E4108E579511}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blum", "Blum", "{A4FC8088-A1BA-4174-AFA6-F70B289FE17D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlumFerma.Models", "BlumFerma.Models\BlumFerma.Models.csproj", "{0143410B-A8B7-4101-A23A-FA44D1EEEFF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlumFerma.Services", "BlumFerma.Services\BlumFerma.Services.csproj", "{ECCB1FE0-1DBD-4DD5-9973-E2EA44B5D66E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlumFerma.Configurators", "BlumFerma.Configurators\BlumFerma.Configurators.csproj", "{825FAC8E-3DC7-4730-A8F8-77BD4D9C149B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlumFerma", "BlumFerma\BlumFerma.csproj", "{7605F098-EAAD-48ED-B8A7-6F486A144DF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +99,22 @@ Global
 		{1BD59557-2D40-42F1-A0E0-E4108E579511}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BD59557-2D40-42F1-A0E0-E4108E579511}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BD59557-2D40-42F1-A0E0-E4108E579511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0143410B-A8B7-4101-A23A-FA44D1EEEFF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0143410B-A8B7-4101-A23A-FA44D1EEEFF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0143410B-A8B7-4101-A23A-FA44D1EEEFF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0143410B-A8B7-4101-A23A-FA44D1EEEFF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECCB1FE0-1DBD-4DD5-9973-E2EA44B5D66E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECCB1FE0-1DBD-4DD5-9973-E2EA44B5D66E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECCB1FE0-1DBD-4DD5-9973-E2EA44B5D66E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECCB1FE0-1DBD-4DD5-9973-E2EA44B5D66E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{825FAC8E-3DC7-4730-A8F8-77BD4D9C149B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{825FAC8E-3DC7-4730-A8F8-77BD4D9C149B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{825FAC8E-3DC7-4730-A8F8-77BD4D9C149B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{825FAC8E-3DC7-4730-A8F8-77BD4D9C149B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7605F098-EAAD-48ED-B8A7-6F486A144DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7605F098-EAAD-48ED-B8A7-6F486A144DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7605F098-EAAD-48ED-B8A7-6F486A144DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7605F098-EAAD-48ED-B8A7-6F486A144DF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +132,10 @@ Global
 		{89E10014-7BDD-4958-A71D-8435A5FBE75D} = {BC8BD71B-9AE0-44B6-BDD3-AEA6C8DE54FC}
 		{C22A7CC9-A192-44B0-B8C6-5B47112D80B6} = {BC8BD71B-9AE0-44B6-BDD3-AEA6C8DE54FC}
 		{1BD59557-2D40-42F1-A0E0-E4108E579511} = {0F0EE1B5-DB6E-4522-B1C4-9392628C27D4}
+		{0143410B-A8B7-4101-A23A-FA44D1EEEFF1} = {A4FC8088-A1BA-4174-AFA6-F70B289FE17D}
+		{ECCB1FE0-1DBD-4DD5-9973-E2EA44B5D66E} = {A4FC8088-A1BA-4174-AFA6-F70B289FE17D}
+		{825FAC8E-3DC7-4730-A8F8-77BD4D9C149B} = {A4FC8088-A1BA-4174-AFA6-F70B289FE17D}
+		{7605F098-EAAD-48ED-B8A7-6F486A144DF5} = {A4FC8088-A1BA-4174-AFA6-F70B289FE17D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EED4722D-E848-4763-B2D7-9F32E53C221D}
