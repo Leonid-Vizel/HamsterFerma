@@ -17,3 +17,5 @@ curl 'https://game-domain.blum.codes/api/v1/game/claim' \
   --data-raw '{"gameId":"93fe9deb-88ae-497c-ba3e-82dc8b69af85","points":103}'
 
 NO ANSWER (Wait for 1 minute before claim)
+
+game_points = randrange(150, 250)
