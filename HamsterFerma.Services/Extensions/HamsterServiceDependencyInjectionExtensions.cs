@@ -7,11 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 
-namespace HamsterFerma.Configurators;
+namespace HamsterFerma.Services.Extensions;
 
-public static class QuartzConfigurator
+public static class HamsterServiceDependencyInjectionExtensions
 {
-    public static void Configure(IHostApplicationBuilder builder)
+    public static void ConfigureHamsterFerma(this IHostApplicationBuilder builder)
     {
         var configs = new AuthBearerConfigCollection();
         builder.Configuration.GetSection("Auth").Bind(configs);
@@ -57,5 +57,10 @@ public static class QuartzConfigurator
                 x.DefaultRequestHeaders.Add("sec-ch-ua-mobile", "?0");
                 x.DefaultRequestHeaders.Add("sec-ch-ua-platform", "\"Windows\"");
             });
+
+        builder.Services.AddHttpClient("Combo", x =>
+        {
+
+        });
     }
 }

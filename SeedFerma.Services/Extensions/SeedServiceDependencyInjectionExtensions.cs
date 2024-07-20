@@ -1,17 +1,17 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Quartz;
-using SeedFerma.Services.Clients;
+﻿using SeedFerma.Services.Clients;
 using SeedFerma.Services.Configs;
 using SeedFerma.Services.Jobs;
 using SeedFerma.Services.Tools;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Quartz;
 
-namespace SeedFerma.Configurators;
+namespace SeedFerma.Services.Extensions;
 
-public static class QuartzConfigurator
+public static class SeedServiceDependencyInjectionExtensions
 {
-    public static void Configure(IHostApplicationBuilder builder)
+    public static void ConfigureSeedFerma(this IHostApplicationBuilder builder)
     {
         var configs = new AuthBearerConfigCollection();
         builder.Configuration.GetSection("Auth").Bind(configs);

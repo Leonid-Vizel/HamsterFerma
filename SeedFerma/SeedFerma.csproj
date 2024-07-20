@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SeedFerma.Configurators\SeedFerma.Configurators.csproj" />
+    <ProjectReference Include="..\SeedFerma.Services\SeedFerma.Services.csproj" />
+    <ProjectReference Include="..\Weasel.Configurators.Common\Weasel.Configurators.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

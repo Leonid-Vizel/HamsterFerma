@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HamsterFerma.Configurators\HamsterFerma.Configurators.csproj" />
+    <ProjectReference Include="..\HamsterFerma.Services\HamsterFerma.Services.csproj" />
+    <ProjectReference Include="..\Weasel.Configurators.Common\Weasel.Configurators.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

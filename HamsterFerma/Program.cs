@@ -1,4 +1,4 @@
-﻿using HamsterFerma.Configurators;
+﻿using HamsterFerma.Services.Extensions;
 using Microsoft.Extensions.Hosting;
 using Weasel.Configurators.Common;
 
@@ -8,7 +8,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 SettingsConfigurator.Configure(builder);
 LoggingConfigurator.Configure(builder);
-QuartzConfigurator.Configure(builder);
+builder.ConfigureHamsterFerma();
 
 using var host = builder.Build();
 
