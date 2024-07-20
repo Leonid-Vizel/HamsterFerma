@@ -4,6 +4,7 @@ using BlumFerma.Services.Configs;
 using BlumFerma.Services.Tools;
 using Microsoft.Extensions.Logging;
 using Quartz;
+using Quartz.Logging;
 using System.Text.Json;
 
 namespace BlumFerma.Services.Jobs;
@@ -11,15 +12,18 @@ namespace BlumFerma.Services.Jobs;
 public sealed class BlumWatchDog(IBlumApiClient client,
                                  IAuthConfigDecoder configDecoder,
                                  ILogger<BlumWatchDog> logger,
-                                 IBlumTaskCompleter taskCompleter) : IJob
+                                 IBlumTaskCompleter taskCompleter,
+                                 IBlumGameCompleter gameCompleter,
+                                 IBlumFarmingCompleter farmingCompleter,
+                                 IBlumDailyRewardCompleter dailyCompleter) : IJob
 {
     public static void ConfigureFor(IServiceCollectionQuartzConfigurator options, AuthBearerConfig config, TimeZoneInfo timeZone)
     {
-        if (!config.AutoTask)
+        if (!config.AutoTask && !config.AutoFarm && !config.AutoDaily && !config.AutoPlay)
         {
             return;
         }
-        if (string.IsNullOrEmpty(config.Token))
+        if (string.IsNullOrEmpty(config.RefreshToken))
         {
             return;
         }
@@ -43,6 +47,31 @@ public sealed class BlumWatchDog(IBlumApiClient client,
             return;
         }
 
-        await taskCompleter.CompleteAsync(config);
+        logger.LogInformation($"[Tag: {config.Tag}] Начата проверка!");
+
+        var refreshResult = await client.RefreshTokenAsync(config);
+        if (refreshResult == null)
+        {
+            return;
+        }
+
+        if (config.AutoDaily)
+        {
+            await dailyCompleter.CompleteAsync(config);
+        }
+        if (config.AutoTask)
+        {
+            await taskCompleter.CompleteAsync(config);
+        }
+        if (config.AutoPlay)
+        {
+            await gameCompleter.CompleteAsync(config);
+        }
+        if (config.AutoFarm)
+        {
+            await farmingCompleter.CompleteAsync(config);
+        }
+
+        logger.LogInformation($"[Tag: {config.Tag}] Проверка окончена!");
     }
 }

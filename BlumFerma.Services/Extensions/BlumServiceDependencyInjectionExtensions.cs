@@ -21,6 +21,8 @@ public static class BlumServiceDependencyInjectionExtensions
             .AddSingleton<IAuthConfigDecoder, AuthConfigDecoder>()
             .AddScoped<IBlumTaskCompleter, BlumTaskCompleter>()
             .AddScoped<IBlumGameCompleter, BlumGameCompleter>()
+            .AddScoped<IBlumFarmingCompleter, BlumFarmingCompleter>()
+            .AddScoped<IBlumDailyRewardCompleter, BlumDailyRewardCompleter>()
             .AddSingleton(configs)
             .AddQuartz(options =>
             {

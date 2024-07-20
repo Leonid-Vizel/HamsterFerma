@@ -10,7 +10,7 @@ public sealed class BlumFarmingState
     public long EndTime { get; set; }
     [JsonIgnore]
     public DateTime EndTimeFormattedUtc
-        => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(1721434384196);
+        => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(EndTime);
     [JsonPropertyName("earningsRate")]
     public string EarningsRate { get; set; } = null!;
     [JsonPropertyName("balance")]
