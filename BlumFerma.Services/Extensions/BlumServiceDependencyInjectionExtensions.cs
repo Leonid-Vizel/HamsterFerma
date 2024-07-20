@@ -1,5 +1,6 @@
 ﻿using BlumFerma.Services.Clients;
 using BlumFerma.Services.Configs;
+using BlumFerma.Services.Jobs;
 using BlumFerma.Services.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,7 @@ namespace BlumFerma.Services.Extensions;
 
 public static class BlumServiceDependencyInjectionExtensions
 {
-    public static void ConfigureHamsterFerma(this IHostApplicationBuilder builder)
+    public static void ConfigureBlumFerma(this IHostApplicationBuilder builder)
     {
         var configs = new AuthBearerConfigCollection();
         builder.Configuration.GetSection("Auth").Bind(configs);
@@ -18,6 +19,8 @@ public static class BlumServiceDependencyInjectionExtensions
         builder.Services
             .AddScoped<IBlumApiClient, BlumApiClient>()
             .AddSingleton<IAuthConfigDecoder, AuthConfigDecoder>()
+            .AddScoped<IBlumTaskCompleter, BlumTaskCompleter>()
+            .AddScoped<IBlumGameCompleter, BlumGameCompleter>()
             .AddSingleton(configs)
             .AddQuartz(options =>
             {
@@ -30,12 +33,7 @@ public static class BlumServiceDependencyInjectionExtensions
                 var zone = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
                 foreach (var config in configs)
                 {
-                    //HamsterClickerWatchDog.ConfigureFor(options, config, zone);
-                    //HamsterUpgradeWatchDog.ConfigureFor(options, config, zone);
-                    //HamsterConditionalUpgradeWatchDog.ConfigureFor(options, config, zone);
-                    //HamsterBoostWatchDog.ConfigureFor(options, config, zone);
-                    //HamsterCipherWatchDog.ConfigureFor(options, config, zone);
-                    //HamsterTaskWatchDog.ConfigureFor(options, config, zone);
+                    BlumWatchDog.ConfigureFor(options, config, zone);
                 }
             }).AddQuartzHostedService(options =>
             {
@@ -55,10 +53,5 @@ public static class BlumServiceDependencyInjectionExtensions
                 x.DefaultRequestHeaders.Add("sec-ch-ua-mobile", "?0");
                 x.DefaultRequestHeaders.Add("sec-ch-ua-platform", "\"Windows\"");
             });
-
-        builder.Services.AddHttpClient("Combo", x =>
-        {
-
-        });
     }
 }
