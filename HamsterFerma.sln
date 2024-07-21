@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeedFerma.Services", "SeedF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{0F0EE1B5-DB6E-4522-B1C4-9392628C27D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weasel.Configurators.Common", "Weasel.Configurators.Common\Weasel.Configurators.Common.csproj", "{1BD59557-2D40-42F1-A0E0-E4108E579511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weasel.Farmer.Services.Common", "Weasel.Farmer.Services.Common\Weasel.Farmer.Services.Common.csproj", "{1BD59557-2D40-42F1-A0E0-E4108E579511}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blum", "Blum", "{A4FC8088-A1BA-4174-AFA6-F70B289FE17D}"
 EndProject
@@ -41,11 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlumFerma", "BlumFerma\Blum
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hexacore", "Hexacore", "{38CCC04E-6785-44DF-B6BC-B88EF7464A93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexacoreFerma", "HexacoreFerma\HexacoreFerma.csproj", "{ECC94D66-77B5-4806-8E8F-89FAE0BEB5B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexacoreFerma", "HexacoreFerma\HexacoreFerma.csproj", "{ECC94D66-77B5-4806-8E8F-89FAE0BEB5B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexacoreFerma.Models", "HexacoreFerma.Models\HexacoreFerma.Models.csproj", "{BEA8C3B4-89E8-48BC-AA26-EF2E09964E86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexacoreFerma.Models", "HexacoreFerma.Models\HexacoreFerma.Models.csproj", "{BEA8C3B4-89E8-48BC-AA26-EF2E09964E86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexacoreFerma.Services", "HexacoreFerma.Services\HexacoreFerma.Services.csproj", "{20133D9F-D068-45D8-81E7-F515C08A77C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexacoreFerma.Services", "HexacoreFerma.Services\HexacoreFerma.Services.csproj", "{20133D9F-D068-45D8-81E7-F515C08A77C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

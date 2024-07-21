@@ -4,7 +4,7 @@ namespace HamsterFerma.Services.Clients;
 
 public interface IComboApiClient
 {
-
+    Task GetLatestComboAsync();
 }
 
 public sealed class ComboApiClient(IHttpClientFactory clientFactory,

@@ -1,13 +1,12 @@
 ﻿using BlumFerma.Services.Extensions;
 using Microsoft.Extensions.Hosting;
-using Weasel.Configurators.Common;
-
-CultureConfigurator.Configure();
+using Weasel.Farmer.Services.Common.Extensions;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-SettingsConfigurator.Configure(builder);
-LoggingConfigurator.Configure(builder);
+builder.ConfigureRussianCulture();
+builder.AddStandartLogging();
+builder.AddStandartAppSettings();
 builder.ConfigureBlumFerma();
 
 using var host = builder.Build();

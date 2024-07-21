@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace Weasel.Configurators.Common;
+namespace Weasel.Farmer.Services.Common.Extensions;
 
-public static class SettingsConfigurator
+public static class WeaselFarmerSettingsDependencyInjectionExtensions
 {
-    public static void Configure(IHostApplicationBuilder builder)
+    public static void AddStandartAppSettings(this IHostApplicationBuilder builder)
     {
         builder.Configuration
             .SetBasePath(Directory.GetCurrentDirectory())

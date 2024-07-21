@@ -1,10 +1,11 @@
-﻿using System.Globalization;
+﻿using Microsoft.Extensions.Hosting;
+using System.Globalization;
 
-namespace Weasel.Configurators.Common;
+namespace Weasel.Farmer.Services.Common.Extensions;
 
-public static class CultureConfigurator
+public static class WeaselFarmerCultureDependencyInjectionExtensions
 {
-    public static void Configure()
+    public static void ConfigureRussianCulture(this IHostApplicationBuilder builder)
     {
         CultureInfo cultureInfo = new CultureInfo("ru-RU");
         cultureInfo.NumberFormat.NumberDecimalSeparator = ".";

@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SeedFerma.Services\SeedFerma.Services.csproj" />
-    <ProjectReference Include="..\Weasel.Configurators.Common\Weasel.Configurators.Common.csproj" />
+    <ProjectReference Include="..\Weasel.Farmer.Services.Common\Weasel.Farmer.Services.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

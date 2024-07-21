@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Weasel.Farmer.Models\Weasel.Farmer.Models.csproj" />
+    <ProjectReference Include="..\Weasel.Farmer.Services.Common\Weasel.Farmer.Services.Common.csproj" />
+  </ItemGroup>
+
 </Project>

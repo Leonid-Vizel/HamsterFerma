@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Weasel.Configurators.Common;
+namespace Weasel.Farmer.Services.Common.Extensions;
 
-public static class LoggingConfigurator
+public static class WeaselFarmerLoggingDependencyInjectionExtensions
 {
-    public static void Configure(IHostApplicationBuilder builder)
+    public static void AddStandartLogging(this IHostApplicationBuilder builder)
     {
-        builder.Logging.ClearProviders();
         if (builder.Environment.IsProduction())
         {
             builder.Logging.AddSystemdConsole();
