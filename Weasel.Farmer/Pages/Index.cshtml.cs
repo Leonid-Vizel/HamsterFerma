@@ -1,20 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Weasel.Farmer.Outer.Pages
-{
-    public class IndexModel : PageModel
-    {
-        private readonly ILogger<IndexModel> _logger;
+namespace Weasel.Farmer.Outer.Pages;
 
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
-
-        public void OnGet()
-        {
-
-        }
-    }
-}
+public sealed class IndexModel : PageModel { }
