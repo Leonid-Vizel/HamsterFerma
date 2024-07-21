@@ -1,52 +1,139 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Weasel.Farmer</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Weasel.Farmer.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - Weasel Farmers</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,700,900|Display+Playfair:200,300,400,700">
+    <link rel="stylesheet" href="~/fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/css/jquery-ui.css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/css/owl.theme.default.min.css">
+
+    <link rel="stylesheet" href="~/css/bootstrap-datepicker.css">
+
+    <link rel="stylesheet" href="~/fonts/flaticon/font/flaticon.css">
+
+
+
+    <link rel="stylesheet" href="~/css/aos.css">
+
+    <link rel="stylesheet" href="~/css/style.css">
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Weasel.Farmer</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="200">
+
+    <!-- <div class="site-wrap"> -->
+
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close mt-3">
+                <span class="icon-close2 js-menu-toggle"></span>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </div>
+        <div class="site-mobile-menu-body"></div>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <header class="site-navbar py-3 js-site-navbar site-navbar-target" role="banner" id="site-navbar">
+
         <div class="container">
-            &copy; 2024 - Weasel.Farmer - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <div class="row align-items-center">
+
+                <div class="col-11 col-xl-3 site-logo">
+                    <h1 class="mb-0"><a href="index.html" class="text-white h2 mb-0">Weasel Famers</a></h1>
+                </div>
+                <div class="col-12 col-md-9 d-none d-xl-block">
+                    <nav class="site-navigation position-relative text-right" role="navigation">
+
+                        <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
+                            <li><a href="#section-home" class="nav-link">Главная</a></li>
+                            <li class="has-children">
+                                <a href="#section-about" class="nav-link">О нас</a>
+                                <ul class="dropdown">
+                                    <li><a href="#section-how-it-works" class="nav-link">Как использовать?</a></li>
+                                    <li><a href="#section-our-team" class="nav-link">Команда</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-children">
+                                <a href="#section-services" class="nav-link">Фермы</a>
+                                <ul class="dropdown">
+                                    <li><a href="" class="nav-link">Hamster Kombat</a></li>
+                                    <li><a href="" class="nav-link">Blum</a></li>
+                                    <li><a href="" class="nav-link">Hexacore</a></li>
+                                    <li><a href="" class="nav-link">Seed</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+
+                <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu h3"></span></a></div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-5 mr-auto">
+                            <h2 class="footer-heading mb-4">О нас</h2>
+                            <p>Добро пожаловать на Weasel Farmers! Мы - команда энтузиастов и профессионалов, посвятивших себя созданию удобного и эффективного сервиса для управления фермами в Play2Earn играх. Наша миссия - помочь вам максимизировать свои доходы от игр, сняв с вас всю рутину и заботы.</p>
+                        </div>
+
+                        <div class="col-md-3">
+                            <h2 class="footer-heading mb-4">Основная информация</h2>
+                            <ul class="list-unstyled">
+                                <li><a href="#">О нас</a></li>
+                                <li><a href="#">Фермы</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-5 mt-5 text-center">
+                <div class="col-md-12">
+                    <div class="border-top pt-5">
+                        <p>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Weasel Famers &copy;
+                            <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </footer>
+    <!-- </div> -->
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="~/js/jquery-ui.js"></script>
+    <script src="~/js/jquery.easing.1.3.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/jquery.stellar.min.js"></script>
+    <script src="~/js/jquery.countdown.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/js/aos.js"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/main.js"></script>
+
 </body>
 </html>

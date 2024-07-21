@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Weasel.Farmer.Pages
+namespace Weasel.Farmer.Outer.Pages
 {
     public class IndexModel : PageModel
     {

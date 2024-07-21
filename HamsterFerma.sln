@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HamsterFerma.Services", "Ha
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hamster", "Hamster", "{88A1C9E8-169F-4CB2-A026-9588B058FD6F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weasel.Farmer", "Weasel.Farmer\Weasel.Farmer.csproj", "{A450F4BF-8592-48ED-A7E3-470895951DFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weasel.Farmer.Outer", "Weasel.Farmer\Weasel.Farmer.Outer.csproj", "{A450F4BF-8592-48ED-A7E3-470895951DFE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Farmer", "Farmer", "{7CF2CD0B-6CF1-4D20-956F-4CB573D32CF4}"
 EndProject
