@@ -17,8 +17,11 @@ public static class HamsterServiceDependencyInjectionExtensions
         builder.Configuration.GetSection("Auth").Bind(configs);
 
         builder.Services
+            .AddMemoryCache()
             .AddScoped<IHamsterApiClient, HamsterApiClient>()
             .AddSingleton<IAuthConfigDecoder, AuthConfigDecoder>()
+            .AddSingleton<IHamsterTimeManager, HamsterTimeManager>()
+            .AddSingleton<IHamsterKeyGameCipherGenerator, HamsterKeyGameCipherGenerator>()
             .AddSingleton<IHamsterCipherDecoder, HamsterCipherDecoder>()
             .AddSingleton(configs)
             .AddQuartz(options =>
@@ -60,7 +63,19 @@ public static class HamsterServiceDependencyInjectionExtensions
 
         builder.Services.AddHttpClient("Combo", x =>
         {
-
+            x.DefaultRequestHeaders.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+            x.DefaultRequestHeaders.Add("accept-language", "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,en-GB;q=0.6,zh-TW;q=0.5,zh-CN;q=0.4,zh;q=0.3");
+            x.DefaultRequestHeaders.Add("cookie", "pll_language=en");
+            x.DefaultRequestHeaders.Add("priority", "u=0, i");
+            x.DefaultRequestHeaders.Add("sec-ch-ua", "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"");
+            x.DefaultRequestHeaders.Add("sec-ch-ua-mobile", "?0");
+            x.DefaultRequestHeaders.Add("sec-ch-ua-platform", "\"Windows\"");
+            x.DefaultRequestHeaders.Add("sec-fetch-dest", "document");
+            x.DefaultRequestHeaders.Add("sec-fetch-mode", "navigate");
+            x.DefaultRequestHeaders.Add("sec-fetch-site", "cross-site");
+            x.DefaultRequestHeaders.Add("sec-fetch-user", "?1");
+            x.DefaultRequestHeaders.Add("upgrade-insecure-requests", "1");
+            x.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36");
         });
     }
 }

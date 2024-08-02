@@ -3,6 +3,7 @@ using HamsterFerma.Models.BoostList;
 using HamsterFerma.Models.CheckTask;
 using HamsterFerma.Models.Cipher;
 using HamsterFerma.Models.Config;
+using HamsterFerma.Models.KeysMinigame;
 using HamsterFerma.Models.Sync;
 using HamsterFerma.Models.Taps;
 using HamsterFerma.Models.TaskList;
@@ -32,6 +33,9 @@ public interface IHamsterApiClient
     Task<HamsterUpgradeBuyResponse?> BuyUpgradeAsync(AuthBearerConfig config, string upgradeId);
     Task<HamsterBoostBuyResponse?> BuyBoostAsync(AuthBearerConfig config, HamsterBoostBuyRequest request);
     Task<HamsterBoostBuyResponse?> BuyBoostAsync(AuthBearerConfig config, string boostId);
+    Task<bool> StartDailyKeysMinigameAsync(AuthBearerConfig config);
+    Task<bool> ClaimDailyKeyGame(AuthBearerConfig config, HamsterKeysMinigameRequest request);
+    Task<bool> ClaimDailyKeyGame(AuthBearerConfig config, string cipher);
 }
 
 public sealed class HamsterApiClient(IHttpClientFactory clientFactory,
@@ -258,4 +262,35 @@ public sealed class HamsterApiClient(IHttpClientFactory clientFactory,
 
     public Task<bool> ClaimDailyCipher(AuthBearerConfig config, string cipher)
         => ClaimDailyCipher(config, new HamsterCipherRequest(cipher));
+
+    public async Task<bool> StartDailyKeysMinigameAsync(AuthBearerConfig config)
+    {
+        if (string.IsNullOrEmpty(config?.Token))
+        {
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
+            return false;
+        }
+        using var client = clientFactory.CreateClient("Hamster");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/start-keys-minigame", null);
+        return httpResponse.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> ClaimDailyKeyGame(AuthBearerConfig config, HamsterKeysMinigameRequest request)
+    {
+        if (string.IsNullOrEmpty(config?.Token))
+        {
+            logger.LogError($"[Tag: {config?.Tag}] {_tokenErrorMessage}");
+            return false;
+        }
+        using var client = clientFactory.CreateClient("Hamster");
+        client.DefaultRequestHeaders.Add("authorization", $"Bearer {config.Token}");
+        var serializedRequest = JsonSerializer.Serialize(request);
+        var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
+        var httpResponse = await client.PostAsync("https://api.hamsterkombatgame.io/clicker/claim-daily-keys-minigame", serializedRequestContent);
+        return httpResponse.IsSuccessStatusCode;
+    }
+
+    public Task<bool> ClaimDailyKeyGame(AuthBearerConfig config, string cipher)
+        => ClaimDailyKeyGame(config, new HamsterKeysMinigameRequest(cipher));
 }
